@@ -8,7 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { todoDto } from './todo.dto';
+import { createTodoDTO, updateTodoDTO } from './todo.dto';
 
 @Controller('todo')
 export class TodoController {
@@ -16,7 +16,9 @@ export class TodoController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.todoService.getTodoById(parseInt(id.toString()));
+    const todoDTO = new updateTodoDTO();
+    todoDTO.id = id;
+    return this.todoService.getTodoById(todoDTO.id);
   }
 
   @Get()
@@ -25,17 +27,28 @@ export class TodoController {
   }
 
   @Post()
-  create(@Body() todoDto: todoDto) {
-    return this.todoService.createTodo(todoDto);
+  create(@Body() todoDto: createTodoDTO) {
+    const todoDTO = new createTodoDTO();
+    todoDTO.title = todoDto.title;
+    todoDTO.description = todoDto.description;
+    todoDTO.done = todoDto.done;
+    return this.todoService.createTodo(todoDTO);
   }
 
   @Delete(':id')
   delete(@Param('id') id: number) {
-    return this.todoService.deleteTodo(parseInt(id.toString()));
+    const todoDTO = new updateTodoDTO();
+    todoDTO.id = id;
+    return this.todoService.deleteTodo(todoDTO.id);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() todoDto: todoDto) {
-    return this.todoService.updateTodo(parseInt(id.toString()), todoDto);
+  update(@Param('id') id: number, @Body() todoDto: updateTodoDTO) {
+    const todoDTO = new updateTodoDTO();
+    todoDTO.id = todoDto.id;
+    todoDTO.title = todoDto.title;
+    todoDTO.description = todoDto.description;
+    todoDTO.done = todoDto.done;
+    return this.todoService.updateTodo(todoDTO.id, todoDTO);
   }
 }
